@@ -10,5 +10,4 @@ RUN uv sync --frozen --no-cache
 
 COPY . .
 
-# アプリケーションを実行
 CMD ["uv", "run", "main.py"]
