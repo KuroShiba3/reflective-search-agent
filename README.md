@@ -1,16 +1,50 @@
 # Reflective Search Agent
 
-LangGraphとGoogle Geminiを使用した、自己反省機能を持つ検索エージェントです。Web検索の必要性を判断し、検索クエリを生成し、結果を評価して改善を繰り返します。
+LangGraphとGoogle Geminiを使用した、自己反省機能を持つWeb検索エージェント。
+
+ユーザーの質問に対して検索の必要性を自動判断し、最適な検索クエリを生成・実行し、回答の品質を評価して自動改善する。
 
 ## 機能
 
-- 質問に対してWeb検索が必要かを自動判断
+- ユーザーの質問に対してWeb検索が必要かを自動判断
+- 最適な検索クエリを自動生成（1-2個）
 - 複数の検索クエリを並列実行
-- 検索結果の評価と自動改善（最大3回まで）
+- 検索結果のWebページから情報を自動取得
+- 検索結果を統合して自然な日本語回答を生成
+- 回答品質を自動評価し、必要に応じて検索または回答を改善（最大3回まで）
+- 会話コンテキストを保持した応答生成
+
+## プロジェクト構造
+
+```
+reflective-search-agent/
+├── src/
+│   ├── __init__.py
+│   ├── graph.py          # LangGraphの定義
+│   ├── nodes.py          # 検索判定・クエリ生成・検索実行・回答生成・評価ノード
+│   ├── state.py          # グラフの状態管理
+│   └── logger.py         # ロガー設定
+├── config/
+│   └── config.py         # 環境変数の読み込み
+├── main.py               # エントリーポイント
+├── pyproject.toml        # プロジェクト設定
+├── Dockerfile            # Docker設定
+├── .env.sample           # 環境変数のサンプル
+└── README.md
+```
+
+## 技術スタック
+
+- **LLM**: Google Gemini (gemini-2.0-flash)
+- **フレームワーク**: LangGraph 0.2.0+
+- **検索**: Google Custom Search API
+- **Webスクレイピング**: WebBaseLoader (BeautifulSoup)
+- **言語**: Python 3.12+
+- **パッケージ管理**: uv
 
 ## 必要な環境変数
 
-以下の環境変数が必要です：
+以下の環境変数が必要：
 
 | 環境変数名 | 説明 | 取得方法 |
 |-----------|------|---------|
@@ -20,6 +54,10 @@ LangGraphとGoogle Geminiを使用した、自己反省機能を持つ検索エ�
 ### 環境変数の設定方法
 
 1. `.env.sample`をコピーして`.env`を作成
+
+```bash
+cp .env.sample .env
+```
 
 2. `.env`ファイルを編集して、実際のAPIキーとCSE IDを設定
 
@@ -53,22 +91,4 @@ docker build -t reflective-search-agent .
 
 ```bash
 docker run reflective-search-agent
-```
-
-## プロジェクト構造
-
-```
-reflective-search-agent/
-├── src/
-│   ├── __init__.py
-│   ├── graph.py          # LangGraphの定義
-│   ├── nodes.py          # 各ノードの実装
-│   └── state.py          # グラフの状態管理
-├── config/
-│   └── config.py         # 環境変数の読み込み
-├── main.py               # エントリーポイント
-├── pyproject.toml        # プロジェクト設定
-├── Dockerfile            # Docker設定
-├── .env.sample           # 環境変数のサンプル
-└── README.md
 ```
